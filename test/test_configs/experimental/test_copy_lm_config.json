@@ -1,0 +1,10 @@
+{
+    "tokenizer": "gpt2-small",
+    "decoder": {
+        "type": "transformer",
+        "use_copy_mechanism": true,
+        "tx_hparams": {
+            "pretrained_model_name": null
+        }
+    }
+}

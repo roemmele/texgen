@@ -1,0 +1,39 @@
+{
+    "tokenizer": "gpt2-small",
+    "token_embedder": {
+        "vocab_size": 50257,
+        "tx_hparams": {
+            "dim": 512
+        }
+    },
+    "encoder": {
+        "type": "rnn",
+        "tx_hparams": {
+            "rnn_cell": {
+                "type": "GRUCell",
+                "kwargs": {
+                    "num_units": 512
+                },
+                "num_layers": 2
+            }
+        }
+    },
+    "decoder": {
+        "type": "rnn",
+        "use_copy_mechanism": true,
+        "tx_hparams": {
+            "rnn_cell": {
+                "type": "GRUCell",
+                "kwargs": {
+                    "num_units": 512
+                },
+                "num_layers": 2
+            },
+            "attention": {
+                "kwargs": {
+                    "num_units": 512
+                }
+            }
+        }
+    }
+}
