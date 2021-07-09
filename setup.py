@@ -8,9 +8,9 @@ setuptools.setup(
     install_requires=['numpy>=1.19.1',
                       'torch>=1.6.0',
                       'spacy>=2.3.2',
-                      'en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz',
+                      'en_core_web_sm@ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0-py3-none-any.whl',
                       'tensorflow>=2.2.0',
-                      'texar-pytorch @ git+https://github.com/asyml/texar-pytorch.git@6067c8c2a6ead04f02d8bed2b3d60a054fb1ba3b',
+                      'texar-pytorch>=0.1.3'
                       ],
     include_package_data=True
 )
