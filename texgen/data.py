@@ -31,10 +31,10 @@ class TexarDataset(tx.data.DatasetBase):
                  tokenizer: GPT2Tokenizer,
                  src_texts_source: Iterator[str],
                  tgt_texts_source: Iterator[str],
-                 ref_texts_source: Optional[Iterator[str]]=None,
-                 max_src_length: int=25,
-                 max_tgt_length: int=75,
-                 batch_size: int=1
+                 ref_texts_source: Optional[Iterator[str]] = None,
+                 max_src_length: int = 25,
+                 max_tgt_length: int = 75,
+                 batch_size: int = 1
                  ) -> None:
         self.tokenizer = tokenizer
         self.max_src_length = max_src_length
@@ -77,11 +77,11 @@ def create_texar_dataset(tokenizer: GPT2Tokenizer,
                          train_tgt_texts: Iterator[str],
                          eval_src_texts: Iterator[str],
                          eval_tgt_texts: Iterator[str],
-                         train_ref_texts: Optional[Iterator[str]]=None,
-                         eval_ref_texts: Optional[Iterator[str]]=None,
-                         max_src_length: int=25,
-                         max_tgt_length: int=75,
-                         batch_size: int=32
+                         train_ref_texts: Optional[Iterator[str]] = None,
+                         eval_ref_texts: Optional[Iterator[str]] = None,
+                         max_src_length: int = 25,
+                         max_tgt_length: int = 75,
+                         batch_size: int = 32
                          ) -> Tuple[TexarDataset, TexarDataset]:
 
     train_data = TexarDataset(tokenizer=tokenizer,
@@ -103,10 +103,10 @@ def create_texar_dataset(tokenizer: GPT2Tokenizer,
 
 def encode_text(tokenizer: GPT2Tokenizer,
                 text: str,
-                prepend_token: Optional[str]=None,
-                max_seq_length: int=75,
-                include_bos_token: bool=True,
-                include_eos_token: bool=True
+                prepend_token: Optional[str] = None,
+                max_seq_length: int = 75,
+                include_bos_token: bool = True,
+                include_eos_token: bool = True
                 ) -> Tuple[List[int], int]:
 
     if prepend_token:
@@ -124,7 +124,7 @@ def encode_text(tokenizer: GPT2Tokenizer,
 
 
 def encode_into_spacy(text: str,
-                      use_profanity_filter: bool=False
+                      use_profanity_filter: bool = False
                       ) -> Doc:
     global spacy_model
     if spacy_model is None:
@@ -139,13 +139,16 @@ def encode_into_spacy(text: str,
 
 
 def get_src_gen_alignment_idxs(spacy_gen_text: Doc,
-                               src_tokens: List[str]
+                               src_tokens: List[str],
+                               match_lowercase: bool = True
                                ) -> List[Tuple[int, int]]:
     gen_tokens = [token.text.lower() for token in spacy_gen_text]
     src_token_start_char_idxs = []
     src_token_end_char_idxs = []
     next_token_idx = 0
     for src_token in src_tokens:
+        if match_lowercase:
+            src_token = src_token.lower()
         src_token_found = False
         for gen_token_idx, gen_token in enumerate(spacy_gen_text[next_token_idx:],
                                                   start=next_token_idx):
@@ -156,9 +159,9 @@ def get_src_gen_alignment_idxs(spacy_gen_text: Doc,
                 src_token_end_char_idxs.append(end_char_idx)
                 src_token_found = True
                 break
-        next_token_idx = gen_token_idx + 1
         if src_token_found == False:
             break
+        next_token_idx = gen_token_idx + 1
 
     return list(zip(src_token_start_char_idxs,
                     src_token_end_char_idxs))
@@ -203,7 +206,8 @@ def get_context_for_regeneration(spacy_src_text: Doc,
             spacy_src_text = spacy_src_text[1:]
             last_aligned_gen_idx = gen_tok_idx
         elif next_src_tok.startswith(gen_tok):
-            spacy_src_text[0]._.match_text = spacy_src_text[0]._.match_text[len(gen_tok):]
+            spacy_src_text[0]._.match_text = spacy_src_text[0]._.match_text[len(
+                gen_tok):]
 
         if not len(spacy_src_text):
             break
@@ -221,13 +225,13 @@ def get_context_for_regeneration(spacy_src_text: Doc,
 
 def encode_example(tokenizer: GPT2Tokenizer,
                    src_text: str,
-                   tgt_text: Optional[str]=None,
-                   ctx_text: Optional[str]=None,
-                   ref_texts: Optional[List[str]]=None,
-                   src_prepend_token: str='{{',
-                   tgt_prepend_token: str='}}',
-                   max_src_length: int=25,
-                   max_tgt_length: int=75
+                   tgt_text: Optional[str] = None,
+                   ctx_text: Optional[str] = None,
+                   ref_texts: Optional[List[str]] = None,
+                   src_prepend_token: str = '{{',
+                   tgt_prepend_token: str = '}}',
+                   max_src_length: int = 25,
+                   max_tgt_length: int = 75
                    ) -> Dict[str, Union[str, List[int], List[str], int]]:
 
     src_ids, src_length = encode_text(tokenizer, src_text,
