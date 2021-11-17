@@ -6,7 +6,7 @@ Texgen is a library for neural text generation that is built on top of [Texar-Py
 
 ## Installation
 
-This library can be installed by running "pip install ." here, at the top level of this repo (i.e. at the same level as the package folder texgen). The library has been tested in Python=3.8, though other versions of Python may work. Once you install, you should be able to "import texgen" outside this repo.
+This library can be installed by running "pip install ." here, at the top level of this repo (i.e. at the same level as the package folder texgen). The library has been tested in Python=3.8, though other versions of Python may work. Once you install, you should be able to "import texgen" outside this repo. You can test your installation by running "python test/test.py" here.
 
 ## Interaction
 

@@ -18,20 +18,21 @@ class BaseTestTrain():
         print("Test training model with config:", self.config_filename, "\n")
         parser = get_train_parser()
         args = parser.parse_args(['-save_dir', './test/test_model',
-                                  '-config_file', os.path.join('./test/test_configs', self.config_filename),
+                                  '-config_file', os.path.join('./test/test_configs',
+                                                               self.config_filename),
                                   '-max_epochs', '1',
                                   '-batch_size', '2',
                                   '-max_grad_norm', '1.0',
                                   '-valid_epoch_end'])
 
-        with open("./test/toy_data/train_src.txt") as f:
+        with open("./test/toy_data/infilling/train.src") as f:
             train_src_texts = [text.strip() for text in f]
-        with open("./test/toy_data/train_tgt.txt") as f:
+        with open("./test/toy_data/infilling/train.tgt") as f:
             train_tgt_texts = [text.strip() for text in f]
 
-        with open("./test/toy_data/eval_src.txt") as f:
+        with open("./test/toy_data/infilling/eval.src") as f:
             eval_src_texts = [text.strip() for text in f]
-        with open("./test/toy_data/eval_tgt.txt") as f:
+        with open("./test/toy_data/infilling/eval.tgt") as f:
             eval_tgt_texts = [text.strip() for text in f]
 
         train(args=args,
@@ -44,12 +45,13 @@ class BaseTestTrain():
 class BaseTestGenerate():
 
     def test_default(self):
-        print("Test generating from model with config:", self.config_filename, "\n")
+        print("Test generating from model with config:",
+              self.config_filename, "\n")
         parser = get_generation_parser()
         args = parser.parse_args(['-model_dir', './test/test_model',
-                                  '-gen_texts_file', './test/test_gen.txt'])
+                                  '-gen_texts_file', './test/toy_data/infilling/eval.gen'])
 
-        with open("./test/toy_data/eval_src.txt") as f:
+        with open("./test/toy_data/infilling/eval.src") as f:
             src_texts = [text.strip() for text in f]
 
         generate(args=args, src_texts=src_texts)
@@ -57,7 +59,7 @@ class BaseTestGenerate():
     def test_with_optional_args(self):
         parser = get_generation_parser()
         args = parser.parse_args(['-model_dir', './test/test_model',
-                                  '-gen_texts_file', './test/test_gen.txt',
+                                  '-gen_texts_file', './test/toy_data/infilling/eval.gen',
                                   '-infer_method', 'sample',
                                   '-sample_top_k', '0',
                                   '-sample_p', '0.7',
@@ -75,14 +77,14 @@ class BaseTestGenerate():
                                   # '-block_profanity'
                                   ])
 
-        with open("./test/toy_data/eval_src.txt") as f:
+        with open("./test/toy_data/infilling/eval.src") as f:
             src_texts = [text.strip() for text in f]
 
         generate(args=args, src_texts=src_texts)
 
         print("Cleaning up...")
         shutil.rmtree("./test/test_model")
-        os.remove("./test/test_gen.txt")
+        os.remove("./test/toy_data/infilling/eval.gen")
 
 
 class Test01LMTrain(unittest.TestCase, BaseTestTrain):
